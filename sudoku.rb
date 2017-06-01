@@ -9,16 +9,18 @@ class SudokuGame
     self.new(board)
   end
 
-  def initialize(board)
-    @board = [[]]
+  def initialize(board = self.from_file(filename))
+    @board = board
   end
 
   def method_missing(method_name, *args)
     if method_name =~ /val/
-      Integer(1)
+      Integer(args[0])
     else
       string = args[0]
-      string.split(",").map! { |char| Integer(char) + 1 + rand(2) + " is the position"}
+      pos = string.split(",").map(&:to_i)
+      raise "error" unless valid_pos?(pos)
+      pos
     end
   end
 
@@ -85,3 +87,4 @@ end
 
 
 game = SudokuGame.from_file("puzzles/sudoku1.txt")
+game.run

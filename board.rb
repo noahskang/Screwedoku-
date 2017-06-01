@@ -1,7 +1,7 @@
 require_relative "tile"
 
 class Board
-  attr_reader :grid
+  attr_reader :grid, :rows
 
   def self.empty_grid
     Array.new(9) do
@@ -10,8 +10,8 @@ class Board
   end
 
   def self.from_file(filename)
-    rows = File.readlines(filename).map(&:chomp)
-    tiles = rows.map do |row|
+    string_rows = File.readlines(filename).map(&:chomp)
+    tiles = string_rows.map do |row|
       nums = row.split("").map { |char| Integer(char) }
       nums.map { |num| Tile.new(num) }
     end
@@ -34,6 +34,10 @@ class Board
     tile.value = value
   end
 
+  def rows
+    grid
+  end
+
   def columns
     rows.transpose
   end
@@ -50,7 +54,7 @@ class Board
     grid.size
   end
 
-  alias_method :rows, :size
+  # alias_method :rows, :size
 
   def solved?
     rows.all? { |row| solved_set?(row) } &&
